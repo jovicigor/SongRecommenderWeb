@@ -1,0 +1,43 @@
+{
+  "name": "md-media-player",
+  "description": "Material Design media player.",
+  "main": [
+    "dist/md-media-player.js",
+    "dist/md-media-player.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/daniel-nagy/md-media-player.git"
+  },
+  "authors": [
+    "Daniel Nagy"
+  ],
+  "homepage": "http://danielnagy.me/md-data-table",
+  "license": "MIT",
+  "keywords": [
+    "material",
+    "media"
+  ],
+  "ignore": [
+    "**/.*",
+    "app",
+    "bower_components",
+    "node_modules",
+    "src",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-material": "^1.0.0"
+  },
+  "_release": "ea9705a84d",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ea9705a84dd1b08a1bbba1968d1c03e42eae861e"
+  },
+  "_source": "https://github.com/daniel-nagy/md-media-player.git",
+  "_target": "*",
+  "_originalSource": "md-media-player",
+  "_direct": true
+}

@@ -11,20 +11,12 @@ app.config(['$routeProvider', '$httpProvider',
         $routeProvider.when('/main', {
             templateUrl: 'app/partials/main.html',
             controller: 'MainController'
-        }).when('/edit/:event_id', {
-            templateUrl: 'app/partials/edit.html',
-            controller: 'EditController'
-        }).when('/about', {
-            templateUrl: 'app/partials/about.html'
         }).otherwise({
             redirectTo: '/main'
         });
 
     }]);
 
-app.run(['$rootScope', 'EventService', function ($rootScope, EventService) {
-    $rootScope.errorMessage = "";
-    $rootScope.webApiPath = '/api/';
-
-
+app.run(['$rootScope', function ($rootScope) {
+    $rootScope.webApiPath = '/';
 }]);
