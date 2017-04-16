@@ -1,0 +1,27 @@
+/*!
+ * Start Bootstrap - Blog Home HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+
+body{
+    padding-top: 20px;
+}
+footer {
+    margin: 50px 0;
+}
+
+.navbar li a{
+    color: #333 !important;
+}
+.navbar li a:hover,
+.navbar li a:focus {
+    outline: none;
+    color: #fff !important; 
+    background-color: #000 !important;
+}
+
+a{
+    cursor:pointer !important;
+}
