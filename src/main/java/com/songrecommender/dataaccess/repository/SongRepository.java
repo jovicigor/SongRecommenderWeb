@@ -8,8 +8,10 @@ import com.songrecommender.dataaccess.repository.SQL.associations.InsertTrackArt
 import com.songrecommender.dataaccess.repository.SQL.genre.InsertGenreQuery;
 import com.songrecommender.dataaccess.repository.SQL.genre.SelectGenreIdQuery;
 import com.songrecommender.dataaccess.repository.SQL.song.InsertSongQuery;
+import com.songrecommender.dataaccess.repository.SQL.song.SelectSongClusterQuery;
 import com.songrecommender.dataaccess.repository.SQL.song.SelectSongIdQuery;
 import com.songrecommender.exception.DataAccessException;
+import com.songrecommender.exception.SongNotFoundException;
 import com.songrecommender.model.Artist;
 import com.songrecommender.model.Song;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,19 @@ public class SongRepository {
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new DataAccessException(e);
+        }
+    }
+
+    public int getClusterByRemoteId(String remoteId) {
+        try (Connection connection = DBConnectionPool.getConnection()) {
+            return new SelectSongClusterQuery(connection)
+                    .byRemoteId(remoteId)
+                    .execute()
+                    .orElseThrow(() -> new SongNotFoundException("Song with provided id doesn't exist."));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException(e);
         }
     }
 

@@ -20,8 +20,8 @@ public class RecommendationController {
     RecommendationService recommendationService;
 
     @GetMapping(path = "/{songName}")
-    public ResponseEntity getRecommendation(@PathVariable String songName) throws SongNotFoundException {
-        Song recommendation = recommendationService.getRecommendationFor(songName);
+    public ResponseEntity getRecommendation(@PathVariable String songName) {
+        SuggestionResponse recommendation = recommendationService.getRecommendationFor(songName);
         return ResponseEntity.ok(recommendation);
     }
 }

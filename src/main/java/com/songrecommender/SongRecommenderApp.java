@@ -14,7 +14,6 @@ public class SongRecommenderApp {
 
     public static void main(String[] args) {
         SpringApplication.run(SongRecommenderApp.class, args);
-
     }
 
 }
