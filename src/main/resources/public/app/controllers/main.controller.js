@@ -1,37 +1,46 @@
 app.controller('MainController', ['$scope', '$rootScope', 'RecommendationService', function ($scope, $rootScope, RecommendationService) {
 
-    var playing = false;
+    $scope.loading = false;
+    $scope.loaded = false;
+    $scope.error = false;
     $scope.recommendationAudio = undefined;
     $scope.requestAudio = undefined;
 
 
     $scope.getRecommendation = function () {
+        $scope.loaded = false;
+        $scope.loading = true;
+        $scope.error = false;
         RecommendationService.getRecommendation($scope.songName)
             .then(function (response) {
-                console.log(response);
-                $scope.recommendation = response.data.recommendation;
-                $scope.recommendationAudio = new Audio($scope.recommendation.previewUrl);
+                    $scope.recommendation = response.data.recommendation[0];
+                    $scope.recommendationAudio = new Audio(response.data.recommendation[0].previewUrl);
 
-                $scope.request = response.data.request;
-                $scope.requestAudio = new Audio($scope.request.previewUrl);
-                $scope.showPlayMenu = true;
-            });
-    };
+                    $scope.request = response.data.request;
+                    $scope.requestAudio = new Audio($scope.request.previewUrl);
 
-    $scope.playRecommendation = function () {
-        $scope.recommendationAudio.play();
-    };
+                    $scope.loading = false;
+                    $scope.loaded = true;
+                },
+                function (data) {
+                    $scope.error = true;
+                });
 
-    $scope.pauseRecommendation = function () {
-        if ($scope.recommendationAudio)
-            $scope.recommendationAudio.pause();
-    };
-    $scope.playRequest = function () {
-        $scope.requestAudio.play();
-    };
+        $scope.playRecommendation = function () {
+            $scope.recommendationAudio.play();
+        };
 
-    $scope.pauseRequest = function () {
-        if ($scope.requestAudio)
-            $scope.requestAudio.pause();
-    }
+        $scope.pauseRecommendation = function () {
+            if ($scope.recommendationAudio)
+                $scope.recommendationAudio.pause();
+        };
+        $scope.playRequest = function () {
+            $scope.requestAudio.play();
+        };
+
+        $scope.pauseRequest = function () {
+            if ($scope.requestAudio)
+                $scope.requestAudio.pause();
+        }
+    };
 }]);

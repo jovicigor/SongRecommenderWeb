@@ -14,8 +14,12 @@
     </button>
 </div>
 
-<div class="col-md-6" ng-if="showPlayMenu">
-    <table class="table">
+<div class="col-md-6">
+    <div class="alert alert-danger" ng-if="error">
+        <strong><i class="fa fa-exclamation"></i></strong> Oops, something went wrong! did you type song name correctly?
+    </div>
+    <i class="fa fa-5x fa-spinner fa-spin col-md-offset-4" ng-show="!error && loading"></i>
+    <table class="table" ng-show="!error && loaded">
         <thead>
         <tr>
             <th>Type</th>
