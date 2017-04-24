@@ -7,6 +7,7 @@ import com.songrecommender.model.Artist;
 import com.songrecommender.model.Song;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,8 +30,12 @@ class MachineLearningWrapper {
         return new Classifier().findClosestCentroids(centroidsCsvPath, minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
-    String findSimmilar(int cluster) {
+    String findSimmilarByEuclidean(int cluster) {
         return new Classifier().findSimilarWithEuclideanDistance("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap);
+    }
+
+    List findTopMatches(int cluster, int numberOfMatches) {
+        return new Classifier().getTopMatches("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap, numberOfMatches);
     }
 
     private Map<Keyword, String> songToSongMap(Song song) {
