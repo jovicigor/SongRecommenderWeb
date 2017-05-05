@@ -5,6 +5,9 @@ import clojure.lang.Keyword;
 import com.songrecommender.Classifier;
 import com.songrecommender.model.Artist;
 import com.songrecommender.model.Song;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,15 +17,22 @@ import java.util.stream.Collectors;
 import static clojure.java.api.Clojure.*;
 import static java.lang.String.valueOf;
 
+@Component
+@Scope(value = "prototype")
 class MachineLearningWrapper {
-    //path-to-cenroids path-to-min-csv path-to-max-csv songMap]
-    private String centroidsCsvPath = "Centroids.csv";
-    private String minValuesCsvPath = "Min.csv";
-    private String maxValuesCsvPath = "Max.csv";
+
+    @Value("#{'${csv.relativePathToCentroidsCsv}'}")
+    String centroidsCsvPath;
+    @Value("#{'${csv.relativePathToMinCsv}'}")
+    String minValuesCsvPath;
+    @Value("#{'${csv.relativePathToMaxCsv}'}")
+    String maxValuesCsvPath;
+    @Value("#{'${csv.relativePathToClustersCsv}'}")
+    String clustersCsvPath;
 
     private Map<Keyword, String> songMap;
 
-    MachineLearningWrapper(Song song) {
+    public void setSong(Song song) {
         songMap = songToSongMap(song);
     }
 
@@ -31,11 +41,11 @@ class MachineLearningWrapper {
     }
 
     String findSimilarByEuclidean(int cluster) {
-        return new Classifier().findSimilarWithEuclideanDistance("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap);
+        return new Classifier().findSimilarWithEuclideanDistance(clustersCsvPath + "Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
     List<String> findTopMatches(int cluster, int numberOfMatches) {
-        return new Classifier().getTopMatches("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap, numberOfMatches);
+        return new Classifier().getTopMatches(clustersCsvPath + "Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap, numberOfMatches);
     }
 
     private Map<Keyword, String> songToSongMap(Song song) {
@@ -70,6 +80,4 @@ class MachineLearningWrapper {
             return (Keyword) read(keyword);
         else throw new IllegalArgumentException("Not a valid keyword.");
     }
-
-
 }

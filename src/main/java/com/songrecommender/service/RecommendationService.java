@@ -6,6 +6,7 @@ import com.songrecommender.model.Song;
 import com.songrecommender.exception.SongNotFoundException;
 import com.songrecommender.rest.controller.RecommendationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static java.lang.String.valueOf;
 import static java.util.stream.Collectors.toList;
 
 @Component
+@Scope(value = "prototype")
 public class RecommendationService {
 
     @Autowired
@@ -23,11 +25,14 @@ public class RecommendationService {
     @Autowired
     private SongRepository songRepository;
 
+    @Autowired
+    private MachineLearningWrapper machineLearningWrapper;
+
     public RecommendationResponse getRecommendationFor(String songName) {
         Song song = spotifyApi.getSongByName(songName)
                 .orElseThrow(() -> new SongNotFoundException(format("Song %s not found.", songName)));
 
-        MachineLearningWrapper machineLearningWrapper = new MachineLearningWrapper(song);
+        machineLearningWrapper.setSong(song);
         String centroidRemoteId = machineLearningWrapper.findCentroid();
 
         int cluster = songRepository.getClusterByRemoteId(centroidRemoteId);
