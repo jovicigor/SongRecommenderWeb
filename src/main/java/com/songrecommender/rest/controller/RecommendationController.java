@@ -1,7 +1,5 @@
 package com.songrecommender.rest.controller;
 
-import com.songrecommender.exception.SongNotFoundException;
-import com.songrecommender.model.Song;
 import com.songrecommender.service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ public class RecommendationController {
 
     @GetMapping(path = "/{songName}")
     public ResponseEntity getRecommendation(@PathVariable String songName) {
-        SuggestionResponse recommendation = recommendationService.getRecommendationFor(songName);
+        RecommendationResponse recommendation = recommendationService.getRecommendationFor(songName);
         return ResponseEntity.ok(recommendation);
     }
 }

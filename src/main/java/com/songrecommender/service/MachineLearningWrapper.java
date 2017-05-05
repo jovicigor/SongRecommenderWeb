@@ -30,11 +30,11 @@ class MachineLearningWrapper {
         return new Classifier().findClosestCentroids(centroidsCsvPath, minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
-    String findSimmilarByEuclidean(int cluster) {
+    String findSimilarByEuclidean(int cluster) {
         return new Classifier().findSimilarWithEuclideanDistance("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
-    List findTopMatches(int cluster, int numberOfMatches) {
+    List<String> findTopMatches(int cluster, int numberOfMatches) {
         return new Classifier().getTopMatches("Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap, numberOfMatches);
     }
 

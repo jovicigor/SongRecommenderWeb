@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@Component
 public final class DBConnectionPool {
 
     private static final BasicDataSource dataSource = new BasicDataSource();

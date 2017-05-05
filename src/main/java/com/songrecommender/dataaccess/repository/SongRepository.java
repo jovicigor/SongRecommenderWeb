@@ -26,7 +26,7 @@ import java.util.List;
 public class SongRepository {
 
     public void saveSong(Song song) {
-        try (Connection connection = DBConnectionPool.getConnection()) {
+        try (Connection connection = getConnection()) {
             int trackId = new SelectSongIdQuery(connection)
                     .byRemoteId(song.getRemoteId())
                     .execute()
@@ -41,7 +41,7 @@ public class SongRepository {
     }
 
     public int getClusterByRemoteId(String remoteId) {
-        try (Connection connection = DBConnectionPool.getConnection()) {
+        try (Connection connection = getConnection()) {
             return new SelectSongClusterQuery(connection)
                     .byRemoteId(remoteId)
                     .execute()
@@ -118,5 +118,9 @@ public class SongRepository {
         } catch (SQLException e) {
             throw new DataAccessException(e);
         }
+    }
+
+    Connection getConnection() throws SQLException {
+        return DBConnectionPool.getConnection();
     }
 }
