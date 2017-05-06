@@ -16,7 +16,7 @@ How the recommendation works?
 
 ## The Big Picture 
 
-This app is a mediator for few other "supporting" applications which can also be found on GitHub.com:
+This app is a central part of the SongRecommender system and it uses few other "supporting" applications which can also be found on GitHub.com:
 1. Application that groups songs by audio feature similarity, it uses KMeans algorithm for clustering   https://github.com/Igor-Jovic/SongRecommenderClustering
 2. Clojure library that implements machine learning algorithms for clustering, classification and recommendation https://github.com/Igor-Jovic/SongRecommender-Clojure
 3. Since the app is not available on public network, there is an application that tweets private dynamic IP address to twitter account https://github.com/Igor-Jovic/SongPickerTwitterUpdater
@@ -25,7 +25,7 @@ This app is a mediator for few other "supporting" applications which can also be
 ## Starting up your own Song Recommendation server
 
 To start your own Song Recommender server:
-1. Clone and build Spotify Proxy Project.
+1. Clone, build and run Spotify Proxy Project.
 2. Clone this project
 3. Clone and build Clojure library for machine learning, put it in root directory of this project.
 4. Build this project
