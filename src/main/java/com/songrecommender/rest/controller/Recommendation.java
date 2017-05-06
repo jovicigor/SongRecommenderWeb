@@ -4,11 +4,11 @@ import com.songrecommender.model.Song;
 
 import java.util.List;
 
-public class RecommendationResponse {
+public class Recommendation {
     private Song request;
     private List<Song> recommendation;
 
-    public RecommendationResponse(Song request, List<Song> recommendations) {
+    public Recommendation(Song request, List<Song> recommendations) {
         this.request = request;
         this.recommendation = recommendations;
     }

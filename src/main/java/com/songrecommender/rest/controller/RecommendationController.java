@@ -19,7 +19,7 @@ public class RecommendationController {
 
     @GetMapping(path = "/{songName}")
     public ResponseEntity getRecommendation(@PathVariable String songName) {
-        RecommendationResponse recommendation = recommendationService.getRecommendationFor(songName);
+        Recommendation recommendation = recommendationService.getRecommendationFor(songName);
         return ResponseEntity.ok(recommendation);
     }
 }

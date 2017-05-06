@@ -4,7 +4,7 @@ import com.songrecommender.dataaccess.external.SpotifyProxyApi;
 import com.songrecommender.dataaccess.repository.SongRepository;
 import com.songrecommender.model.Song;
 import com.songrecommender.exception.SongNotFoundException;
-import com.songrecommender.rest.controller.RecommendationResponse;
+import com.songrecommender.rest.controller.Recommendation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.util.stream.Collectors.toList;
 
 @Component
 @Scope(value = "prototype")
@@ -28,23 +27,35 @@ public class RecommendationService {
     @Autowired
     private MachineLearningWrapper machineLearningWrapper;
 
-    public RecommendationResponse getRecommendationFor(String songName) {
-        Song song = spotifyApi.getSongByName(songName)
-                .orElseThrow(() -> new SongNotFoundException(format("Song %s not found.", songName)));
+    RecommendationService(SpotifyProxyApi spotifyApi, SongRepository songRepository, MachineLearningWrapper machineLearningWrapper) {
+        this.spotifyApi = spotifyApi;
+        this.songRepository = songRepository;
+        this.machineLearningWrapper = machineLearningWrapper;
+    }
 
+    public Recommendation getRecommendationFor(String songName) {
+        Song song = getSong(songName);
+
+        int cluster = getCluster(song);
+        List<Song> recommendations = getTopMatchesFromCluster(5, cluster);
+
+        //      songRepository.saveSong(song);
+        return new Recommendation(song, recommendations);
+    }
+
+    private Song getSong(String songName) {
+        return spotifyApi.getSongByName(songName)
+                .orElseThrow(() -> new SongNotFoundException(format("Song %s not found.", songName)));
+    }
+
+    private int getCluster(Song song) {
         machineLearningWrapper.setSong(song);
         String centroidRemoteId = machineLearningWrapper.findCentroid();
+        return songRepository.getClusterByRemoteId(centroidRemoteId);
+    }
 
-        int cluster = songRepository.getClusterByRemoteId(centroidRemoteId);
-        List<String> topMatchesids = machineLearningWrapper.findTopMatches(cluster, 5);
-        List<Song> recommendations = topMatchesids
-                .stream()
-                .map(id -> spotifyApi.getSongByRemoteId(id)
-                        .orElseThrow(() -> new SongNotFoundException(format("Song %s not found.", topMatchesids))))
-                .collect(toList());
-
-        //TODO: save with id
-        //      songRepository.saveSong(song);
-        return new RecommendationResponse(song, recommendations);
+    private List<Song> getTopMatchesFromCluster(int numberOfMatches, int cluster) {
+        List<String> topMatchesids = machineLearningWrapper.findTopMatches(cluster, numberOfMatches);
+        return spotifyApi.getSongsByRemoteIds((String[]) topMatchesids.toArray());
     }
 }
