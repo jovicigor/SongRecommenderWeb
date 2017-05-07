@@ -32,7 +32,7 @@ public class RecommendationServiceTest {
     @Test
     public void getRecommendationFor_songExists_returnsCorrectNumberOfMatces() {
         Song song = song("known song", "remoteid");
-        String[] recommendationIds = {"remoteid1", "remoteid2", "remoteid3", "remoteid4", "remoteid4"};
+        List<String> recommendationIds = Arrays.asList("remoteid1", "remoteid2", "remoteid3", "remoteid4", "remoteid4");
 
         SpotifyProxyApi spotifyApiMock = mock(SpotifyProxyApi.class);
         when(spotifyApiMock.getSongByName(song.getName())).thenReturn(Optional.of(song));
@@ -41,7 +41,7 @@ public class RecommendationServiceTest {
         MachineLearningWrapper machineLearningMock = mock(MachineLearningWrapper.class);
         doNothing().when(machineLearningMock).setSong(song);
         when(machineLearningMock.findCentroid()).thenReturn("centroidRemoteId");
-        when(machineLearningMock.findTopMatches(anyInt(), anyInt())).thenReturn(asList(recommendationIds));
+        when(machineLearningMock.findTopMatches(anyInt(), anyInt())).thenReturn(recommendationIds);
 
         SongRepository songRepositoryMock = mock(SongRepository.class);
         when(songRepositoryMock.getClusterByRemoteId(any())).thenReturn(0);
@@ -68,8 +68,8 @@ public class RecommendationServiceTest {
         return song;
     }
 
-    private List<Song> topMatches(String... remoteIds) {
-        return Arrays.stream(remoteIds)
+    private List<Song> topMatches(List<String> remoteIds) {
+        return remoteIds.stream()
                 .map(s -> new Song())
                 .collect(Collectors.toList());
     }

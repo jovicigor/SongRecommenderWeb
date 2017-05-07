@@ -56,6 +56,7 @@ public class RecommendationService {
 
     private List<Song> getTopMatchesFromCluster(int numberOfMatches, int cluster) {
         List<String> topMatchesids = machineLearningWrapper.findTopMatches(cluster, numberOfMatches);
-        return spotifyApi.getSongsByRemoteIds((String[]) topMatchesids.toArray());
+
+        return spotifyApi.getSongsByRemoteIds(topMatchesids);
     }
 }

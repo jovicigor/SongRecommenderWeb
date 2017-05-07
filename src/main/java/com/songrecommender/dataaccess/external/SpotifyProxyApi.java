@@ -40,10 +40,10 @@ public class SpotifyProxyApi {
         return Optional.ofNullable(song);
     }
 
-    public List<Song> getSongsByRemoteIds(String[] remoteIds) {
-        return stream(remoteIds)
+    public List<Song> getSongsByRemoteIds(List<String> remoteIds) {
+        return remoteIds.stream()
                 .map(this::getSongByRemoteId)
-                .map(song -> song.orElseThrow(() -> new SongNotFoundException(format("One of top matches doesn't exist."))))
+                .map(song -> song.orElseThrow(() -> new SongNotFoundException("One of top matches doesn't exist.")))
                 .collect(toList());
     }
 
