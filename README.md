@@ -51,6 +51,6 @@ Before running the jar file, project structure should look like this:
 
 The application supports two options for similarity calculation:
 1. Euclidean distance - simple Euclidean distance calculated using audio features (described in Clojure lib for machine learning) 
-2. Mixed similarity measure - euclidean similarity + "genre similarity". Genre similarity is a measure of genre overlapping. Genres string is splitted into tokens for both songs (eg. "rock blues-rock classic-rock" becomes [rock blues classic]) and similarity is calculated as number-of-overlapping-genres/union-of-genres. 
+2. Mixed similarity measure - euclidean similarity + "genre similarity". Genre similarity is a measure of genre overlapping. Genres string is splitted into tokens for both songs (eg. "rock blues-rock classic-rock" becomes [rock blues classic]) and similarity is calculated as number of overlapping genres divided by number of genres in union. 
 
 Mixed similarity measure gives more accurate recommendations since it takes into account genres and not only audio features, but because of genre similarity calculation it consumes more time.  
