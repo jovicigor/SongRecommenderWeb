@@ -46,3 +46,29 @@ Before running the jar file, project structure should look like this:
     -Max.csv
     -Centroids.csv
  ```
+
+## Benchmark
+
+The application supports two options for similarity calculation:
+1. Euclidean distance - simple Euclidean distance calculated using audio features (described in Clojure lib for machine learning) 
+2. Mixed similarity measure - euclidean similarity + "genre similarity". Genre similarity is a measure of genre overlapping. Genres string is splitted into tokens for both songs (eg. "rock blues-rock classic-rock" becomes [rock blues classic]) and similarity is calculated as number of overlapping genres divided by number of genres in union. 
+
+Mixed similarity measure gives more accurate recommendations since it takes into account genres and not only audio features, but because of genre similarity calculation it consumes more time. 
+
+JMH(Java Microbenchmark Harness) was used for benchmarking two methods in the RecommendationService - getRecommendationByEuclideanFor(String songName) and getRecommendationFor(String songName). The first one uses only euclidean similarity while the other uses mixed similarity explained above, benchmarking code can be found in src/test/java/benchmark package. 
+The chosen mode for benchmarking is average time needed for completing the recommendation request, and it includes:
+1. Getting the song information from Spotify.com by song name.
+2. Assigning a cluster to a song.
+3. Calculating similarities.
+4. Fetching the most similar song's info from Spofify.com.
+5. Returning the recommendation.
+
+### Benchmarking results
+The table below shows the benchmarking results
+
+Benchmark method                                         | Number of Method calls | Average time | Units
+-------------                                            | -------------          | -------------| -------------
+recommendationByOnlyEuclideanDistance                    | 200                    | 2705.180     | milliseconds per operation
+recommendationByEuclideanDistanceAndGenreSimilarity      | 200                    | 3594.487     | milliseconds per operation
+
+Conclusion: using mixed similarity takes on average 0.889 seconds more than euclidean distance but usually gives more accurate recommendations - for Alborosie - Rastafari Anthem song (modern reggae), euclidean distance method returned rap song I Think They Like Me - feat. Jermaine Dupri, Da Brat & Bow Wow while mixed similarity method returned Damian Marley	-	Educated Fools, which is also modern reggae.  
