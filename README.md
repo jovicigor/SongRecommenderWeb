@@ -63,7 +63,7 @@ The chosen mode for benchmarking is average time needed for completing the recom
 4. Fetching the most similar song's info from Spofify.com.
 5. Returning the recommendation.
 
-##### Benchmarking results
+### Benchmarking results
 The table below shows the benchmarking results
 
 Benchmark method                                         | Number of Method calls | Average time | Units
