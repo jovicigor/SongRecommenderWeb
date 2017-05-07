@@ -56,7 +56,7 @@ The application supports two options for similarity calculation:
 Mixed similarity measure gives more accurate recommendations since it takes into account genres and not only audio features, but because of genre similarity calculation it consumes more time. 
 
 JMH(Java Microbenchmark Harness) was used for benchmarking two methods in the RecommendationService - getRecommendationByEuclideanFor(String songName) and getRecommendationFor(String songName). The first one uses only euclidean similarity while the other uses mixed similarity explained above, benchmarking code can be found in src/test/java/benchmark package. 
-The chosen mode for benchmarking is average time needed for completing the recommendation request, and it includes:
+The chosen mode for benchmarking is average time needed for completing the recommendation request, and it covers:
 1. Getting the song information from Spotify.com by song name.
 2. Assigning a cluster to a song.
 3. Calculating similarities.
