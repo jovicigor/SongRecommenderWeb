@@ -22,6 +22,10 @@ public class SpotifyProxyApi {
     @Value("#{'${api.spotifyProxyApi}'}")
     String URL;
 
+    public SpotifyProxyApi(String apiUrl) {
+        URL = apiUrl;
+    }
+
     public Optional<Song> getSongByName(String trackName) {
         Optional<Song> retval = Optional.empty();
         RestTemplate restTemplate = new RestTemplate();

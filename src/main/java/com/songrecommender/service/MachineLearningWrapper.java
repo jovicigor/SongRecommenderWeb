@@ -3,7 +3,6 @@ package com.songrecommender.service;
 
 import clojure.lang.Keyword;
 import com.songrecommender.Classifier;
-import com.songrecommender.model.Artist;
 import com.songrecommender.model.Song;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -14,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static clojure.java.api.Clojure.*;
+import static clojure.java.api.Clojure.read;
 import static java.lang.String.valueOf;
 
 @Component
 @Scope(value = "prototype")
-class MachineLearningWrapper {
+public class MachineLearningWrapper {
 
     @Value("#{'${csv.relativePathToCentroidsCsv}'}")
     String centroidsCsvPath;
@@ -30,21 +29,28 @@ class MachineLearningWrapper {
     @Value("#{'${csv.relativePathToClustersCsv}'}")
     String clustersCsvPath;
 
+    public MachineLearningWrapper(String pathToCentroids, String pathToMin, String pathToMax, String pathToClusters) {
+        centroidsCsvPath = pathToCentroids;
+        minValuesCsvPath = pathToMin;
+        maxValuesCsvPath = pathToMax;
+        clustersCsvPath = pathToClusters;
+    }
+
     private Map<Keyword, String> songMap;
 
     public void setSong(Song song) {
         songMap = songToSongMap(song);
     }
 
-    String findCentroid() {
+    public String findCentroid() {
         return new Classifier().findClosestCentroids(centroidsCsvPath, minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
-    String findSimilarByEuclidean(int cluster) {
+    public String findSimilarByEuclidean(int cluster) {
         return new Classifier().findSimilarWithEuclideanDistance(clustersCsvPath + "Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap);
     }
 
-    List<String> findTopMatches(int cluster, int numberOfMatches) {
+    public List<String> findTopMatches(int cluster, int numberOfMatches) {
         return new Classifier().getTopMatches(clustersCsvPath + "Cluster" + cluster + ".csv", minValuesCsvPath, maxValuesCsvPath, songMap, numberOfMatches);
     }
 

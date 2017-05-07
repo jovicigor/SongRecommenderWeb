@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static java.util.Collections.*;
 
 @Component
 @Scope(value = "prototype")
@@ -27,20 +28,37 @@ public class RecommendationService {
     @Autowired
     private MachineLearningWrapper machineLearningWrapper;
 
-    RecommendationService(SpotifyProxyApi spotifyApi, SongRepository songRepository, MachineLearningWrapper machineLearningWrapper) {
+    private int numberOfMatches = 5;
+
+    public RecommendationService(SpotifyProxyApi spotifyApi, SongRepository songRepository, MachineLearningWrapper machineLearningWrapper) {
         this.spotifyApi = spotifyApi;
         this.songRepository = songRepository;
         this.machineLearningWrapper = machineLearningWrapper;
+    }
+
+    public RecommendationService withNumberOfMatches(int numberOfMatches) {
+        this.numberOfMatches = numberOfMatches;
+        return this;
     }
 
     public Recommendation getRecommendationFor(String songName) {
         Song song = getSong(songName);
 
         int cluster = getCluster(song);
-        List<Song> recommendations = getTopMatchesFromCluster(5, cluster);
+        List<Song> recommendations = getTopMatchesFromCluster(numberOfMatches, cluster);
 
         //      songRepository.saveSong(song);
         return new Recommendation(song, recommendations);
+    }
+
+    public Recommendation getRecommendationByEuclideanFor(String songName) {
+        Song song = getSong(songName);
+
+        int cluster = getCluster(song);
+        Song recommendation = getClosestByEuclidean(cluster).orElseThrow(() -> new SongNotFoundException("Recommendation not found"));
+
+        //      songRepository.saveSong(song);
+        return new Recommendation(song, singletonList(recommendation));
     }
 
     private Song getSong(String songName) {
@@ -58,5 +76,11 @@ public class RecommendationService {
         List<String> topMatchesids = machineLearningWrapper.findTopMatches(cluster, numberOfMatches);
 
         return spotifyApi.getSongsByRemoteIds(topMatchesids);
+    }
+
+    private Optional<Song> getClosestByEuclidean(int cluster) {
+        String matchId = machineLearningWrapper.findSimilarByEuclidean(cluster);
+
+        return spotifyApi.getSongByRemoteId(matchId);
     }
 }
